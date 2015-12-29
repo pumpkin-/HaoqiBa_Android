@@ -31,7 +31,7 @@ import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
-import com.shine.niceapp.R;
+import com.shine.haoqiba.R;
 
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {

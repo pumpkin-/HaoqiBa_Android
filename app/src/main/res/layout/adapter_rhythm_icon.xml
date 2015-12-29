@@ -11,7 +11,7 @@
         android:background="@drawable/home_icon_bg"
         android:padding="@dimen/rhythm_icon_margin">
 
-        <com.shine.niceapp.ui.widget.RoundedImageView
+        <com.shine.haoqiba.ui.widget.RoundedImageView
             android:id="@id/image_icon"
             android:layout_width="44.0dip"
             android:layout_height="44.0dip"

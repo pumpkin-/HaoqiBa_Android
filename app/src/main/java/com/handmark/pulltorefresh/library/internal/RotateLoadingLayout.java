@@ -24,7 +24,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView.ScaleType;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.shine.niceapp.R;
+import com.shine.haoqiba.R;
 
 
 public class RotateLoadingLayout extends LoadingLayout {

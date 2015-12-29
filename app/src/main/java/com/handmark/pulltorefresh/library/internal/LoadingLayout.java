@@ -37,7 +37,7 @@ import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.shine.niceapp.R;
+import com.shine.haoqiba.R;
 
 
 @SuppressLint("ViewConstructor")

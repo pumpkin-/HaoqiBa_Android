@@ -71,7 +71,7 @@
             android:gravity="center_vertical"
             android:textColor="@color/white" />
 
-        <com.shine.niceapp.ui.widget.HtmlTextView
+        <com.shine.haoqiba.ui.widget.HtmlTextView
             android:id="@id/text_digest"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

@@ -21,7 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.shine.niceapp.R;
+import com.shine.haoqiba.R;
 
 public class PullToRefreshViewPager extends PullToRefreshBase<ViewPager> {
 

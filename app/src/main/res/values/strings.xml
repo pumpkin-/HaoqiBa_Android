@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about_bri">关于 Bri 体验科技</string>
-    <string name="about_us">关于最美应用</string>
+    <string name="about_us">关于好奇吧</string>
     <string name="action_feedback">意见反馈</string>
     <string name="action_settings">Settings</string>
     <string name="activate">激活</string>
@@ -16,7 +16,7 @@
     <string name="app_category">精选分类</string>
     <string name="app_downloading">应用正在后台下载</string>
     <string name="app_icon_tip">app_icon</string>
-    <string name="app_name">最美应用</string>
+    <string name="app_name">好奇吧</string>
     <string name="app_prom">推广</string>
     <string name="app_prom_why">为什么有推广</string>
     <string name="app_size">应用大小：{0}</string>
