@@ -20,4 +20,16 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:windowSoftInputMode">adjustPan</item>
     </style>
+
+    <style name="Anim_fade" parent="android:Theme.NoTitleBar">
+        <item name="android:windowAnimationStyle">@style/fade</item>
+    </style>
+
+    <style name="fade" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/faded_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/faded_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/faded_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/faded_out</item>
+    </style>
+
 </resources>

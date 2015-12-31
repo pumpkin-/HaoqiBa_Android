@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_left_sildemenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,18 +13,20 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/ll_mine"
+            android:id="@+id/ll_mine_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.shine.haoqiba.ui.widget.RoundedImageView
                 android:id="@+id/img_avatar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                app:riv_corner_radius="100dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_launcher" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_avatar" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,15 +54,16 @@
             android:id="@+id/ll_daily_surprise"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_mine"
-            android:layout_margin="16dp"
+            android:layout_below="@id/ll_mine_info"
             android:layout_marginTop="30dp"
+            android:padding="16dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 android:src="@drawable/icon_surprise" />
 
             <TextView
@@ -77,13 +81,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_daily_surprise"
-            android:layout_margin="16dp"
-            android:layout_marginTop="30dp"
+            android:padding="16dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
+                android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 android:src="@drawable/icon_community" />
 
@@ -102,14 +106,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_community"
-            android:layout_margin="16dp"
-            android:layout_marginTop="30dp"
+            android:padding="16dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 android:src="@drawable/icon_favouriate" />
 
             <TextView
@@ -117,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:text="收藏"
+                android:text="我的收藏"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -127,14 +131,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_favouriate"
-            android:layout_margin="16dp"
-            android:layout_marginTop="30dp"
+            android:padding="16dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 android:src="@drawable/icon_setting" />
 
             <TextView
@@ -152,13 +156,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_setting"
-            android:layout_margin="16dp"
-            android:layout_marginTop="30dp"
+            android:padding="16dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
+                android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 android:src="@drawable/icon_join" />
 
@@ -176,7 +180,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_margin="16dp"
+            android:padding="16dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -190,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:text="扫描二维码"
+                android:text="关注微信公众号"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>

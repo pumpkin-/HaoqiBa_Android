@@ -106,7 +106,7 @@
     <item type="id" name="txt_num">false</item>
     <item type="id" name="arrow">false</item>
     <item type="id" name="txt_app_name">false</item>
-    <item type="id" name="card">false</item>
+    <item type="id" name="curiosityCard">false</item>
     <item type="id" name="user_info_area">false</item>
     <item type="id" name="img_head_portrait">false</item>
     <item type="id" name="txt_author">false</item>

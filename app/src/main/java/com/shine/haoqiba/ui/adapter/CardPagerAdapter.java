@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.shine.haoqiba.bean.Card;
+import com.shine.haoqiba.bean.CuriosityCard;
 import com.shine.haoqiba.interfaces.ViewPagerClickListener;
 import com.shine.haoqiba.ui.fragment.CardFragment;
 
@@ -13,32 +13,32 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CardPagerAdapter extends FragmentStatePagerAdapter {
-    private List<Card> mPostList;
+    private List<CuriosityCard> mPostList;
     private List<Fragment> mFragments = new ArrayList();
     private ViewPagerClickListener viewPagerClickListener;
-    public CardPagerAdapter(FragmentManager paramFragmentManager, List<Card> paramList,ViewPagerClickListener viewPagerClickListener) {
+    public CardPagerAdapter(FragmentManager paramFragmentManager, List<CuriosityCard> paramList,ViewPagerClickListener viewPagerClickListener) {
         super(paramFragmentManager);
         this.viewPagerClickListener = viewPagerClickListener;
         Iterator localIterator = paramList.iterator();
         while (localIterator.hasNext()) {
-            Card localAppModel = (Card) localIterator.next();
+            CuriosityCard localAppModel = (CuriosityCard) localIterator.next();
             this.mFragments.add(CardFragment.getInstance(localAppModel, viewPagerClickListener));
         }
         this.mPostList = paramList;
     }
 
-    public void addCardList(List<Card> cardList) {
+    public void addCardList(List<CuriosityCard> curiosityCardList) {
         ArrayList localArrayList = new ArrayList();
-        Iterator localIterator = cardList.iterator();
+        Iterator localIterator = curiosityCardList.iterator();
         while (localIterator.hasNext())
-            localArrayList.add(CardFragment.getInstance((Card) localIterator.next(), viewPagerClickListener));
+            localArrayList.add(CardFragment.getInstance((CuriosityCard) localIterator.next(), viewPagerClickListener));
         if (this.mFragments == null)
             this.mFragments = new ArrayList();
         this.mFragments.addAll(localArrayList);
-        this.mPostList.addAll(cardList);
+        this.mPostList.addAll(curiosityCardList);
     }
 
-    public List<Card> getCardList() {
+    public List<CuriosityCard> getCardList() {
         return this.mPostList;
     }
 
@@ -54,13 +54,13 @@ public class CardPagerAdapter extends FragmentStatePagerAdapter {
         return this.mFragments.get(paramInt);
     }
 
-    public void setCardList(List<Card> cardList) {
+    public void setCardList(List<CuriosityCard> curiosityCardList) {
         ArrayList localArrayList = new ArrayList();
-        Iterator localIterator = cardList.iterator();
+        Iterator localIterator = curiosityCardList.iterator();
         while (localIterator.hasNext())
-            localArrayList.add(CardFragment.getInstance((Card) localIterator.next(),viewPagerClickListener));
+            localArrayList.add(CardFragment.getInstance((CuriosityCard) localIterator.next(),viewPagerClickListener));
         this.mFragments = localArrayList;
-        this.mPostList = cardList;
+        this.mPostList = curiosityCardList;
     }
 
     public void setFragments(List<Fragment> paramList) {

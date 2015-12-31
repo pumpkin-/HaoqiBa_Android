@@ -13,23 +13,25 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.extras.viewpager.PullToRefreshViewPager;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.shine.haoqiba.R;
-import com.shine.haoqiba.bean.Card;
+import com.shine.haoqiba.bean.CuriosityCard;
+import com.shine.haoqiba.bean.MResult;
 import com.shine.haoqiba.control.IRhythmItemListener;
 import com.shine.haoqiba.control.RhythmAdapter;
 import com.shine.haoqiba.control.RhythmLayout;
 import com.shine.haoqiba.control.ViewPagerScroller;
 import com.shine.haoqiba.interfaces.ViewPagerClickListener;
+import com.shine.haoqiba.networks.domain.HttpParams;
 import com.shine.haoqiba.ui.activity.MainActivity;
 import com.shine.haoqiba.ui.adapter.CardPagerAdapter;
 import com.shine.haoqiba.ui.widget.ProgressHUD;
 import com.shine.haoqiba.utils.AnimatorUtils;
 import com.shine.haoqiba.utils.HexUtils;
 import com.shine.haoqiba.utils.NetWorkHelper;
+import com.shine.haoqiba.utils.common.Navigate;
 import com.special.ResideMenu.ResideMenu;
 
 import java.lang.reflect.Field;
@@ -42,7 +44,7 @@ import java.util.List;
  * Time: 19:45
  * Description:
  */
-public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefreshBase.OnRefreshListener<ViewPager>, ViewPagerClickListener {
+public class DailyCuriosityFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener<ViewPager>, ViewPagerClickListener {
 
     private TextView mTimeFirstText;
     private TextView mTimeSecondText;
@@ -85,7 +87,7 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
     //策划菜单
     ResideMenu resideMenu;
 
-    private List<Card> mCardList;
+    private List<CuriosityCard> mCuriosityCardList;
 
     private ProgressHUD mProgressHUD;
 
@@ -94,7 +96,7 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
      */
     private RhythmAdapter mRhythmAdapter;
 
-    private static CardViewPagerFragment mFragment;
+    private static DailyCuriosityFragment mFragment;
 
     /**
      * 自定义钢琴控件的监听器
@@ -104,7 +106,7 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
         }
 
         public void onSelected(final int paramInt) {
-            CardViewPagerFragment.this.mHandler.postDelayed(new Runnable() {
+            DailyCuriosityFragment.this.mHandler.postDelayed(new Runnable() {
                 public void run() {
                     mViewPager.setCurrentItem(paramInt);
                 }
@@ -123,15 +125,15 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
 
         public void onPageSelected(int position) {
             onAppPagerChange(position);
-            if (mHasNext && (position > -10 + mCardList.size()) && !mIsRequesting && NetWorkHelper.isWifiDataEnable(getActivity())) {
+            if (mHasNext && (position > -10 + mCuriosityCardList.size()) && !mIsRequesting && NetWorkHelper.isWifiDataEnable(getActivity())) {
                 fetchData();
             }
         }
     };
 
-    public static CardViewPagerFragment getInstance() {
+    public static DailyCuriosityFragment getInstance() {
         if (mFragment == null) {
-            mFragment = new CardViewPagerFragment();
+            mFragment = new DailyCuriosityFragment();
         }
         return mFragment;
     }
@@ -140,7 +142,7 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
     @Override
     protected View initViews(LayoutInflater inflater) {
         //初始化控件
-        View view = inflater.inflate(R.layout.fragment_niceapp, null);
+        View view = inflater.inflate(R.layout.fragment_haoqiba, null);
         mTimeFirstText = (TextView) view.findViewById(R.id.text_time_first);
         mTimeSecondText = (TextView) view.findViewById(R.id.text_time_second);
         mMainView = view.findViewById(R.id.main_view);
@@ -172,13 +174,14 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
 
     @Override
     protected void initActions(View paramView) {
+
         //设置控件的监听
         mRhythmLayout.setRhythmListener(rhythmItemListener);
         mPullToRefreshViewPager.setOnRefreshListener(this);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
         mRocketToHeadBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramView) {
-            CardViewPagerFragment.this.mViewPager.setCurrentItem(0, true);
+                DailyCuriosityFragment.this.mViewPager.setCurrentItem(0, true);
             }
         });
 
@@ -186,7 +189,7 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
 
     @Override
     protected void initData() {
-        mCardList = new ArrayList<>();
+        mCuriosityCardList = new ArrayList<>();
     }
 
     /**
@@ -215,10 +218,11 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
      * @param position viewPager的位置
      */
     private void onAppPagerChange(int position) {
+        currPagePosition = position;
         //执行动画，改变升起的钢琴按钮
         mRhythmLayout.showRhythmAtPosition(position);
         toggleRocketBtn(position);
-        Card post = this.mCardList.get(position);
+        CuriosityCard post = this.mCuriosityCardList.get(position);
         //得到当前的背景颜色
         int currColor = HexUtils.getHexColor(post.getBackgroundColor());
         resideMenu.setBackgroundColor(currColor);
@@ -239,18 +243,18 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
      * 加载数据
      */
     private void fetchData() {
-        ArrayList<Card> cardList = new ArrayList<>();
+        ArrayList<CuriosityCard> curiosityCardList = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             int m = i % 8;
-            Card card = addData(m);
-            cardList.add(card);
+            CuriosityCard curiosityCard = addData(m);
+            curiosityCardList.add(curiosityCard);
         }
-        mPreColor = HexUtils.getHexColor(cardList.get(0).getBackgroundColor());
-        updateAppAdapter(cardList);
+        mPreColor = HexUtils.getHexColor(curiosityCardList.get(0).getBackgroundColor());
+        updateAppAdapter(curiosityCardList);
     }
 
 
-    private void updateAppAdapter(List<Card> cardList) {
+    private void updateAppAdapter(List<CuriosityCard> curiosityCardList) {
         if ((getActivity() == null) || (getActivity().isFinishing())) {
             return;
         }
@@ -258,44 +262,44 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
             this.mProgressHUD.dismiss();
             this.isAdapterUpdated = true;
         }
-        if (cardList.isEmpty()) {
+        if (curiosityCardList.isEmpty()) {
             this.mMainView.setBackgroundColor(this.mPreColor);
             return;
         }
-        int size = mCardList.size();
+        int size = mCuriosityCardList.size();
 
         if (mCardPagerAdapter == null) {
             mCurrentViewPagerPage = 0;
-            mCardPagerAdapter = new CardPagerAdapter(getActivity().getSupportFragmentManager(), cardList, this);
+            mCardPagerAdapter = new CardPagerAdapter(getActivity().getSupportFragmentManager(), curiosityCardList, this);
             mViewPager.setAdapter(mCardPagerAdapter);
         } else {
-            mCardPagerAdapter.addCardList(cardList);
+            mCardPagerAdapter.addCardList(curiosityCardList);
             mCardPagerAdapter.notifyDataSetChanged();
         }
-        addCardIconsToDock(cardList);
+        addCardIconsToDock(curiosityCardList);
 
-        this.mCardList = mCardPagerAdapter.getCardList();
+        this.mCuriosityCardList = mCardPagerAdapter.getCardList();
 
         if (mViewPager.getCurrentItem() == size - 1)
             mViewPager.setCurrentItem(1 + mViewPager.getCurrentItem(), true);
     }
 
-    private void addCardIconsToDock(final List<Card> cardList) {
+    private void addCardIconsToDock(final List<CuriosityCard> curiosityCardList) {
         if (mRhythmAdapter == null) {
-            resetRhythmLayout(cardList);
+            resetRhythmLayout(curiosityCardList);
             return;
         }
-        mRhythmAdapter.addCardList(cardList);
+        mRhythmAdapter.addCardList(curiosityCardList);
         mRhythmAdapter.notifyDataSetChanged();
     }
 
     //重置钢琴控件数据源
-    private void resetRhythmLayout(List<Card> cardList) {
+    private void resetRhythmLayout(List<CuriosityCard> curiosityCardList) {
         if (getActivity() == null)
             return;
-        if (cardList == null)
-            cardList = new ArrayList<>();
-        mRhythmAdapter = new RhythmAdapter(getActivity(), mRhythmLayout, cardList);
+        if (curiosityCardList == null)
+            curiosityCardList = new ArrayList<>();
+        mRhythmAdapter = new RhythmAdapter(getActivity(), mRhythmLayout, curiosityCardList);
         mRhythmLayout.setAdapter(mRhythmAdapter);
     }
 
@@ -347,7 +351,7 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
                 }
 
                 public void onAnimationEnd(Animator paramAnimator) {
-                    CardViewPagerFragment.this.mRocketToHeadBtn.setVisibility(View.GONE);
+                    DailyCuriosityFragment.this.mRocketToHeadBtn.setVisibility(View.GONE);
                 }
 
                 public void onAnimationRepeat(Animator paramAnimator) {
@@ -361,91 +365,91 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
     }
 
 
-    private Card addData(int i) {
-        Card card = new Card();
+    private CuriosityCard addData(int i) {
+        CuriosityCard curiosityCard = new CuriosityCard();
         switch (i) {
             case 0:
-                card.setTitle("God of Light");
-                card.setSubTitle("点亮世界之光");
-                card.setDigest("当下制造精致的游戏往往超越了常规概念中对游戏的界定。通关的过程更像是在欣赏一部电影大片。通过镜片反射，即使只有一道光芒，我们也能点亮世界");
-                card.setUpNum(124);
-                card.setAuthorName("小美");
-                card.setBackgroundColor("#00aac6");
-                card.setCoverImgerUrl("card_cover1");
-                card.setIconUrl("card_icon1");
+                curiosityCard.setTitle("God of Light");
+                curiosityCard.setSubTitle("点亮世界之光");
+                curiosityCard.setDigest("当下制造精致的游戏往往超越了常规概念中对游戏的界定。通关的过程更像是在欣赏一部电影大片。通过镜片反射，即使只有一道光芒，我们也能点亮世界");
+                curiosityCard.setUpNum(124);
+                curiosityCard.setAuthorName("小美");
+                curiosityCard.setBackgroundColor("#00aac6");
+                curiosityCard.setCoverImgerUrl("card_cover1");
+                curiosityCard.setIconUrl("card_icon1");
                 break;
             case 1:
-                card.setTitle("我的手机与众不同");
-                card.setSubTitle("专题");
-                card.setDigest("谁说美化一定要Root?选对了应用一样可以美美哒～有个性，爱折腾，我们不爱啃苹果，我们是大安卓用户!都说「世界上没有相同的叶子」，想让自己的手机与众不同?让小美告诉你");
-                card.setUpNum(299);
-                card.setAuthorName("小美");
-                card.setBackgroundColor("#dc4e97");
-                card.setCoverImgerUrl("card_cover2");
-                card.setIconUrl("card_icon2");
+                curiosityCard.setTitle("我的手机与众不同");
+                curiosityCard.setSubTitle("专题");
+                curiosityCard.setDigest("谁说美化一定要Root?选对了应用一样可以美美哒～有个性，爱折腾，我们不爱啃苹果，我们是大安卓用户!都说「世界上没有相同的叶子」，想让自己的手机与众不同?让小美告诉你");
+                curiosityCard.setUpNum(299);
+                curiosityCard.setAuthorName("小美");
+                curiosityCard.setBackgroundColor("#dc4e97");
+                curiosityCard.setCoverImgerUrl("card_cover2");
+                curiosityCard.setIconUrl("card_icon2");
                 break;
             case 2:
-                card.setTitle("BlackLight");
-                card.setSubTitle("做最纯粹的微博客户端");
-                card.setDigest("Android的官方微博客户端显得太过臃肿，这让不少人转而投向第三方客户端。「Fuubo」、「四次元」、「Smooth」，一个个耳熟能详的名字，它们各有千秋，也吸引了一大票追随者，而今天推荐的BlackLight，又是一个被重复造出的「轮子」，然而这个后来者可不一般");
-                card.setUpNum(241);
-                card.setAuthorName("小最");
-                card.setBackgroundColor("#00aac6");
-                card.setCoverImgerUrl("card_cover3");
-                card.setIconUrl("card_icon3");
+                curiosityCard.setTitle("BlackLight");
+                curiosityCard.setSubTitle("做最纯粹的微博客户端");
+                curiosityCard.setDigest("Android的官方微博客户端显得太过臃肿，这让不少人转而投向第三方客户端。「Fuubo」、「四次元」、「Smooth」，一个个耳熟能详的名字，它们各有千秋，也吸引了一大票追随者，而今天推荐的BlackLight，又是一个被重复造出的「轮子」，然而这个后来者可不一般");
+                curiosityCard.setUpNum(241);
+                curiosityCard.setAuthorName("小最");
+                curiosityCard.setBackgroundColor("#00aac6");
+                curiosityCard.setCoverImgerUrl("card_cover3");
+                curiosityCard.setIconUrl("card_icon3");
                 break;
             case 3:
-                card.setTitle("BuzzFeed");
-                card.setSubTitle("最好玩的新闻在这里");
-                card.setDigest("BuzzFeed是一款聚合新闻阅读应用，这款应用来自美国用户增长流量最快，内容最能吸引大众眼球的互联网新闻网站，当然我们不必知道BuzzFeed的创始人多么流弊，BuzzFeed本身是多么具有颠覆性，我们只需要知道这款应用的内容绝对有料，而去也是十分精致，简洁");
-                card.setUpNum(119);
-                card.setAuthorName("小最");
-                card.setBackgroundColor("#e76153");
-                card.setCoverImgerUrl("card_cover4");
-                card.setIconUrl("card_icon4");
+                curiosityCard.setTitle("BuzzFeed");
+                curiosityCard.setSubTitle("最好玩的新闻在这里");
+                curiosityCard.setDigest("BuzzFeed是一款聚合新闻阅读应用，这款应用来自美国用户增长流量最快，内容最能吸引大众眼球的互联网新闻网站，当然我们不必知道BuzzFeed的创始人多么流弊，BuzzFeed本身是多么具有颠覆性，我们只需要知道这款应用的内容绝对有料，而去也是十分精致，简洁");
+                curiosityCard.setUpNum(119);
+                curiosityCard.setAuthorName("小最");
+                curiosityCard.setBackgroundColor("#e76153");
+                curiosityCard.setCoverImgerUrl("card_cover4");
+                curiosityCard.setIconUrl("card_icon4");
                 break;
             case 4:
-                card.setTitle("Nester");
-                card.setSubTitle("专治各种熊孩子");
-                card.setDigest("Nester简单的说是一款用于家长限制孩子玩手机的应用，这只可爱的圆滚滚的小鸟不仅可以设置孩子可以使用的应用，还可以用定时器控释孩子玩手机的时长。在小最看来，Nester最直白的描述就是专治各种熊孩子");
-                card.setUpNum(97);
-                card.setAuthorName("小最");
-                card.setBackgroundColor("#9a6dbb");
-                card.setCoverImgerUrl("card_cover5");
-                card.setIconUrl("card_icon5");
+                curiosityCard.setTitle("Nester");
+                curiosityCard.setSubTitle("专治各种熊孩子");
+                curiosityCard.setDigest("Nester简单的说是一款用于家长限制孩子玩手机的应用，这只可爱的圆滚滚的小鸟不仅可以设置孩子可以使用的应用，还可以用定时器控释孩子玩手机的时长。在小最看来，Nester最直白的描述就是专治各种熊孩子");
+                curiosityCard.setUpNum(97);
+                curiosityCard.setAuthorName("小最");
+                curiosityCard.setBackgroundColor("#9a6dbb");
+                curiosityCard.setCoverImgerUrl("card_cover5");
+                curiosityCard.setIconUrl("card_icon5");
                 break;
             case 5:
-                card.setTitle("二次元专题");
-                card.setSubTitle("啊喂，别总想去四维空间啦");
-                card.setDigest("为了满足美友中不少二次元少年的需求，小最前几日特(bei)意(po)被拍扁为二维状，去那个神奇的世界走了一遭。在被深深震撼之后，为大家带来本次「二次元专题」");
-                card.setUpNum(317);
-                card.setAuthorName("小最");
-                card.setBackgroundColor("#51aa53");
-                card.setCoverImgerUrl("card_cover6");
-                card.setIconUrl("card_icon6");
+                curiosityCard.setTitle("二次元专题");
+                curiosityCard.setSubTitle("啊喂，别总想去四维空间啦");
+                curiosityCard.setDigest("为了满足美友中不少二次元少年的需求，小最前几日特(bei)意(po)被拍扁为二维状，去那个神奇的世界走了一遭。在被深深震撼之后，为大家带来本次「二次元专题」");
+                curiosityCard.setUpNum(317);
+                curiosityCard.setAuthorName("小最");
+                curiosityCard.setBackgroundColor("#51aa53");
+                curiosityCard.setCoverImgerUrl("card_cover6");
+                curiosityCard.setIconUrl("card_icon6");
                 break;
             case 6:
-                card.setTitle("Music Player");
-                card.setSubTitle("闻其名，余音绕梁");
-                card.setDigest("一款App，纯粹到极致，便是回到原点「Music Player」，一款音乐播放器，一个干净到显得敷衍的名字。它所打动的，是哪些需要音乐，才可以慰借心灵的人。");
-                card.setUpNum(385);
-                card.setAuthorName("小最");
-                card.setBackgroundColor("#ea5272");
-                card.setCoverImgerUrl("card_cover7");
-                card.setIconUrl("card_icon7");
+                curiosityCard.setTitle("Music Player");
+                curiosityCard.setSubTitle("闻其名，余音绕梁");
+                curiosityCard.setDigest("一款App，纯粹到极致，便是回到原点「Music Player」，一款音乐播放器，一个干净到显得敷衍的名字。它所打动的，是哪些需要音乐，才可以慰借心灵的人。");
+                curiosityCard.setUpNum(385);
+                curiosityCard.setAuthorName("小最");
+                curiosityCard.setBackgroundColor("#ea5272");
+                curiosityCard.setCoverImgerUrl("card_cover7");
+                curiosityCard.setIconUrl("card_icon7");
                 break;
             case 7:
-                card.setTitle("el");
-                card.setSubTitle("剪纸人の唯美旅程");
-                card.setDigest("断崖之上，孤牢中醒来的他，意外地得到一把能乘风翱翔的伞，于是在悠扬的钢琴曲中，剪纸人开始了漫无目的的漂泊之旅。脚下的重峦叠嶂，飞行中遇到的种种障碍，不日又遇到了他，将会有一段怎样的旅程?");
-                card.setUpNum(622);
-                card.setAuthorName("小美");
-                card.setBackgroundColor("#e76153");
-                card.setCoverImgerUrl("card_cover8");
-                card.setIconUrl("card_icon8");
+                curiosityCard.setTitle("el");
+                curiosityCard.setSubTitle("剪纸人の唯美旅程");
+                curiosityCard.setDigest("断崖之上，孤牢中醒来的他，意外地得到一把能乘风翱翔的伞，于是在悠扬的钢琴曲中，剪纸人开始了漫无目的的漂泊之旅。脚下的重峦叠嶂，飞行中遇到的种种障碍，不日又遇到了他，将会有一段怎样的旅程?");
+                curiosityCard.setUpNum(622);
+                curiosityCard.setAuthorName("小美");
+                curiosityCard.setBackgroundColor("#e76153");
+                curiosityCard.setCoverImgerUrl("card_cover8");
+                curiosityCard.setIconUrl("card_icon8");
                 break;
         }
-        return card;
+        return curiosityCard;
     }
 
 
@@ -457,8 +461,17 @@ public class CardViewPagerFragment extends AbsBaseFragment implements PullToRefr
         }
     }
 
+    private int currPagePosition = 0;
     @Override
     public void onPagerClick() {
-        Toast.makeText(getActivity(), "点击了" + mCurrentViewPagerPage, Toast.LENGTH_SHORT).show();
+        Navigate.startCuriosityDetailsActivity(getActivity(), mCuriosityCardList.get(currPagePosition));
+        //getActivity().startActivity(new Intent(getActivity(), TestActivity.class));
     }
+
+
+    @Override
+    public void enhanceOnResponse(String Tag, String json, MResult result, HttpParams params) {
+
+    }
+
 }

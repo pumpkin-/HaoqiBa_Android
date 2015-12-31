@@ -8,32 +8,32 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shine.haoqiba.R;
-import com.shine.haoqiba.bean.Card;
+import com.shine.haoqiba.bean.CuriosityCard;
+import com.shine.haoqiba.bean.MResult;
 import com.shine.haoqiba.interfaces.ViewPagerClickListener;
+import com.shine.haoqiba.networks.domain.HttpParams;
 import com.shine.haoqiba.ui.activity.MainActivity;
-import com.shine.haoqiba.ui.widget.HtmlTextView;
 import com.shine.haoqiba.utils.AppUtils;
 
-public class CardFragment extends AbsBaseFragment {
-    protected Card mCard;
+public class CardFragment extends BaseFragment {
+    protected CuriosityCard mCuriosityCard;
 
     protected TextView mAuthorText;
     protected ImageView mBottomEdgeImageView;
     protected TextView mBravoNumText;
     protected RelativeLayout mCardLayout;
     protected ImageView mCoverImageView;
-    protected HtmlTextView mDigestText;
+    protected TextView mDigestText;
     protected TextView mSubTitleText;
     protected TextView mTitleText;
 
-    public static CardFragment getInstance(Card card, ViewPagerClickListener viewPagerClickListener) {
+    public static CardFragment getInstance(CuriosityCard curiosityCard, ViewPagerClickListener viewPagerClickListener) {
         CardFragment localCardFragment = new CardFragment();
         localCardFragment.setViewPagerClickListener(viewPagerClickListener);
         Bundle localBundle = new Bundle();
-        localBundle.putSerializable("card", card);
+        localBundle.putSerializable("curiosityCard", curiosityCard);
         localCardFragment.setArguments(localBundle);
         return localCardFragment;
     }
@@ -47,16 +47,17 @@ public class CardFragment extends AbsBaseFragment {
         mCoverImageView.setOnClickListener(this);
         mTitleText = ((TextView) view.findViewById(R.id.text_title));
         mSubTitleText = ((TextView) view.findViewById(R.id.text_subtitle));
-        mDigestText = ((HtmlTextView) view.findViewById(R.id.text_digest));
+        mDigestText = ((TextView) view.findViewById(R.id.text_digest));
         mDigestText.setOnClickListener(this);
         mAuthorText = ((TextView) view.findViewById(R.id.text_author));
         mBravoNumText = ((TextView) view.findViewById(R.id.text_bravos));
 
-        mTitleText.setText(this.mCard.getTitle());
-        mSubTitleText.setText(this.mCard.getSubTitle());
-        this.mBravoNumText.setText("  " + this.mCard.getUpNum());
-        this.mDigestText.setTextViewHtml(mCard.getDigest());
-        this.mAuthorText.setText(Html.fromHtml("<B>" + this.mCard.getAuthorName() + "</B>"));
+        mTitleText.setText(this.mCuriosityCard.getTitle());
+        mSubTitleText.setText(this.mCuriosityCard.getSubTitle());
+        this.mBravoNumText.setText("  " + this.mCuriosityCard.getUpNum());
+        this.mDigestText.setText(mCuriosityCard.getDigest());
+        this.mAuthorText.setText(Html.fromHtml("<B>" + this.mCuriosityCard.getAuthorName() + "</B>"));
+        this.mAuthorText.setOnClickListener(this);
         if (getActivity() instanceof MainActivity) {
             resideMenu = ((MainActivity) getActivity()).getResideMenu();
             resideMenu.addIgnoredView(mDigestText);
@@ -67,18 +68,23 @@ public class CardFragment extends AbsBaseFragment {
         return view;
     }
 
+    @Override
+    public void enhanceOnResponse(String Tag, String json, MResult result, HttpParams params) {
+
+    }
+
     protected void initAndDisplayCoverImage() {
         int coverWidth = AppUtils.getScreenDisplayMetrics(getActivity()).widthPixels - 2 * getResources().getDimensionPixelSize(R.dimen.card_margin);
         int coverHeight = (int) (180.0F * (coverWidth / 320.0F));
         ViewGroup.LayoutParams localLayoutParams = this.mCoverImageView.getLayoutParams();
         localLayoutParams.height = Float.valueOf(coverHeight).intValue();
-        //加载图片
-        int picResource = AppUtils.getDrawableIdByName(getActivity(), mCard.getCoverImgerUrl());
+        //加载图片 TODO
+        int picResource = AppUtils.getDrawableIdByName(getActivity(), mCuriosityCard.getCoverImgerUrl());
         mCoverImageView.setBackgroundResource(picResource);
     }
 
     protected void initData() {
-        this.mCard = (Card) getArguments().getSerializable("card");
+        this.mCuriosityCard = (CuriosityCard) getArguments().getSerializable("curiosityCard");
     }
 
     protected void initActions(View paramView) {
@@ -102,11 +108,8 @@ public class CardFragment extends AbsBaseFragment {
 
     @Override
     public void onClick(View v) {
-        if (v == mDigestText) {
-            Toast.makeText(getActivity(), "digest", Toast.LENGTH_SHORT).show();
-            viewPagerClickListener.onPagerClick();
-        }
-        if(v == mCoverImageView) {
+        if (v == mDigestText || v == mCoverImageView || v == mAuthorText) {
+            //Toast.makeText(getActivity(), "digest", Toast.LENGTH_SHORT).show();
             viewPagerClickListener.onPagerClick();
         }
     }

@@ -2,7 +2,8 @@ package com.shine.haoqiba.bean;
 
 import java.io.Serializable;
 
-public class Card implements Serializable {
+public class CuriosityCard implements Serializable {
+
     private static final long serialVersionUID = -5376313495678563362L;
 
     private int id;
@@ -103,5 +104,21 @@ public class Card implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "CuriosityCard{" +
+                "id=" + id +
+                ", uid=" + uid +
+                ", upNum=" + upNum +
+                ", title='" + title + '\'' +
+                ", backgroundColor='" + backgroundColor + '\'' +
+                ", subTitle='" + subTitle + '\'' +
+                ", digest='" + digest + '\'' +
+                ", authorName='" + authorName + '\'' +
+                ", coverImgerUrl='" + coverImgerUrl + '\'' +
+                ", iconUrl='" + iconUrl + '\'' +
+                '}';
     }
 }

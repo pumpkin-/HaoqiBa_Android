@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.shine.haoqiba.R;
-import com.shine.haoqiba.bean.Card;
+import com.shine.haoqiba.bean.CuriosityCard;
 import com.shine.haoqiba.utils.AppUtils;
 
 import java.util.ArrayList;
@@ -24,39 +24,39 @@ public class RhythmAdapter extends BaseAdapter {
     /**
      * 数据源
      */
-    private List<Card> mCardList;
+    private List<CuriosityCard> mCuriosityCardList;
 
     private LayoutInflater mInflater;
     private Context mContext;
     private RhythmLayout mRhythmLayout;
 
-    public RhythmAdapter(Context context, RhythmLayout rhythmLayout, List<Card> cardList) {
+    public RhythmAdapter(Context context, RhythmLayout rhythmLayout, List<CuriosityCard> curiosityCardList) {
         this.mContext = context;
         this.mRhythmLayout = rhythmLayout;
-        this.mCardList = new ArrayList();
-        this.mCardList.addAll(cardList);
+        this.mCuriosityCardList = new ArrayList();
+        this.mCuriosityCardList.addAll(curiosityCardList);
         if (context != null)
             this.mInflater = LayoutInflater.from(context);
     }
 
-    public List<Card> getCardList() {
-        return this.mCardList;
+    public List<CuriosityCard> getCardList() {
+        return this.mCuriosityCardList;
     }
 
-    public void addCardList(List<Card> cardList) {
-        mCardList.addAll(cardList);
+    public void addCardList(List<CuriosityCard> curiosityCardList) {
+        mCuriosityCardList.addAll(curiosityCardList);
     }
 
     public int getCount() {
-        return this.mCardList.size();
+        return this.mCuriosityCardList.size();
     }
 
     public Object getItem(int position) {
-        return this.mCardList.get(position);
+        return this.mCuriosityCardList.get(position);
     }
 
     public long getItemId(int paramInt) {
-        return (this.mCardList.get(paramInt)).getUid();
+        return (this.mCuriosityCardList.get(paramInt)).getUid();
     }
 
 
@@ -80,7 +80,7 @@ public class RhythmAdapter extends BaseAdapter {
         iconParams.height = iconSize;
         imageIcon.setLayoutParams(iconParams);
         //设置背景图片
-        imageIcon.setBackgroundResource(AppUtils.getDrawableIdByName(mContext, mCardList.get(position).getIconUrl()));
+        imageIcon.setBackgroundResource(AppUtils.getDrawableIdByName(mContext, mCuriosityCardList.get(position).getIconUrl()));
 
         return relativeLayout;
     }
@@ -90,8 +90,8 @@ public class RhythmAdapter extends BaseAdapter {
         this.mRhythmLayout.invalidateData();
     }
 
-    public void setCardList(List<Card> paramList) {
-        this.mCardList = paramList;
+    public void setCardList(List<CuriosityCard> paramList) {
+        this.mCuriosityCardList = paramList;
     }
 
     /**
