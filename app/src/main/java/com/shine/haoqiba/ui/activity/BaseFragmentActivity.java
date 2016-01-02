@@ -3,7 +3,6 @@ package com.shine.haoqiba.ui.activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -17,7 +16,7 @@ import com.special.ResideMenu.ResideMenu;
  */
 public abstract class BaseFragmentActivity extends FragmentActivity implements View.OnClickListener {
     //侧滑菜单
-    ResideMenu resideMenu;
+    protected ResideMenu resideMenu;
 
     //每日一奇,互奇社区,收藏,设置,加入我们
     private LinearLayout ll_daily_surprise;
@@ -47,11 +46,9 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements V
         resideMenu.attachToActivity(this);
         resideMenu.setUse3D(true);
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        resideMenu.setShadowVisible(true);
+        resideMenu.setShadowVisible(false);
         resideMenu.setBackgroundColor(getResources().getColor(R.color.blue));
         // add gesture operation's ignored views
-        View ignored_view = (View.inflate(this, R.layout.fragment_haoqiba, null)).findViewById(R.id.pager);
-        resideMenu.addIgnoredView(ignored_view);
         resideMenu.setOnClickListener(this);
 
         //初始化侧滑菜单的控件
@@ -60,13 +57,19 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements V
         ll_daily_surprise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resideMenu.closeMenu();
                 Navigate.startDailyCuriosityFragment(BaseFragmentActivity.this);
+                resideMenu.closeMenu();
             }
         });
         //互奇社区
         ll_community = (LinearLayout) resideMenu.getLeftMenuView().findViewById(R.id.ll_community);
-        ll_community.setOnClickListener(this);
+        ll_community.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigate.startCuriosityCommunityFragment(BaseFragmentActivity.this);
+                resideMenu.closeMenu();
+            }
+        });
         //我的收藏
         ll_favouriate = (LinearLayout) resideMenu.getLeftMenuView().findViewById(R.id.ll_favouriate);
         ll_favouriate.setOnClickListener(this);
@@ -79,13 +82,12 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements V
 
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return resideMenu.dispatchTouchEvent(ev);
+    public ResideMenu getResideMenu() {
+        return resideMenu;
     }
 
-//    @Override
-//    public void overridePendingTransition(int enterAnim, int exitAnim) {
-//        super.overridePendingTransition(R.anim.faded_in, R.anim.faded_out);
-//    }
+    //    @Override
+    //    public void overridePendingTransition(int enterAnim, int exitAnim) {
+    //        super.overridePendingTransition(R.anim.faded_in, R.anim.faded_out);
+    //    }
 }

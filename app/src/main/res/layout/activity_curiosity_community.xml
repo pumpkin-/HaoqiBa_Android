@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@id/btn_side_menu_or_back"
+        android:layout_width="wrap_content"
+        android:layout_height="50.0dip"
+        android:layout_marginLeft="5.0dip"
+        android:layout_marginTop="5.0dip"
+        android:background="@color/transparent"
+        android:drawableLeft="@drawable/btn_common_logo"
+        android:drawablePadding="5.0dip"
+        android:paddingLeft="5.0dip"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/word_date" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:layout_below="@+id/btn_side_menu_or_back"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/xlv_curiosity_community"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:divider="@null"
+        android:layout_width="match_parent"/>
+
+</RelativeLayout>

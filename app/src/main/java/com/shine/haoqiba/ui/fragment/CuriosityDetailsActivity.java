@@ -1,4 +1,4 @@
-package com.shine.haoqiba.ui.activity;
+package com.shine.haoqiba.ui.fragment;
 
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -14,6 +14,7 @@ import com.pulltozoomview.PullToZoomScrollViewEx;
 import com.shine.haoqiba.R;
 import com.shine.haoqiba.application.AppData;
 import com.shine.haoqiba.bean.CuriosityCard;
+import com.shine.haoqiba.ui.activity.BaseFragmentActivity;
 import com.shine.haoqiba.utils.AppUtils;
 
 /**
@@ -34,7 +35,7 @@ public class CuriosityDetailsActivity extends BaseFragmentActivity {
 
     @Override
     protected View initView() {
-        View view = View.inflate(this, R.layout.fragment_curiosity_pulltozoomscrollviewex, null);
+        View view = View.inflate(this,R.layout.fragment_curiosity_pulltozoomscrollviewex, null);
         iv_back = (ImageView) view.findViewById(R.id.iv_back);
         iv_back.setOnClickListener(this);
         webview_PullToZoomScrollView = (PullToZoomScrollViewEx) view.findViewById(R.id.webview_PullToZoomScrollViewEx);
@@ -43,13 +44,12 @@ public class CuriosityDetailsActivity extends BaseFragmentActivity {
 
     @Override
     protected void initData() {
-        curiosityCard = (CuriosityCard) getIntent().getExtras().getSerializable(AppData.EXTRAS_DATA);
+        curiosityCard = (CuriosityCard)getIntent().getExtras().getSerializable(AppData.EXTRAS_DATA);
         // Toast.makeText(getActivity(), curiosityCard.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void initActions(View paramView) {
-        initSlideMenu();
         initZoomScrollView();
         initWebView();
     }
@@ -57,7 +57,7 @@ public class CuriosityDetailsActivity extends BaseFragmentActivity {
     //初始化zoom ScrollView
     private void initZoomScrollView() {
         DisplayMetrics localDisplayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(localDisplayMetrics);
+       getWindowManager().getDefaultDisplay().getMetrics(localDisplayMetrics);
         int mScreenHeight = localDisplayMetrics.heightPixels;
         int mScreenWidth = localDisplayMetrics.widthPixels;
         LinearLayout.LayoutParams localObject = new LinearLayout.LayoutParams(mScreenWidth, (int) (9.0F * (mScreenWidth / 16.0F)));
@@ -123,7 +123,9 @@ public class CuriosityDetailsActivity extends BaseFragmentActivity {
     public void onClick(View v) {
         //回退
         if (v == iv_back) {
-            this.finish();
+            //Toast.makeText(getActivity(), "hello", Toast.LENGTH_SHORT).show();
+            finish();
+            //就Navigate.startDailyCuriosityFragment(getActivity());
         }
     }
 

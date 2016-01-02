@@ -37,7 +37,7 @@
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/Anim_fade">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,7 +46,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.shine.haoqiba.ui.activity.CuriosityDetailsActivity"/>
+            android:name=".ui.fragment.CuriosityDetailsActivity"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ui.fragment.CuriosityCommunityFragment"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>

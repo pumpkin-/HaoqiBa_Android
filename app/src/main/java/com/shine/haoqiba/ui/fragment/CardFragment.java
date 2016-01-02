@@ -38,7 +38,7 @@ public class CardFragment extends BaseFragment {
         return localCardFragment;
     }
 
-
+    @Override
     protected View initViews(LayoutInflater paramLayoutInflater) {
         View view = paramLayoutInflater.inflate(R.layout.fragment_card, null);
         mCardLayout = ((RelativeLayout) view.findViewById(R.id.box_card));
@@ -90,15 +90,15 @@ public class CardFragment extends BaseFragment {
     protected void initActions(View paramView) {
     }
 
-    public void onDestroy() {
-        this.mCoverImageView.setImageBitmap(null);
-        super.onDestroy();
-    }
-
-    public void onDestroyView() {
-        this.mCoverImageView.setImageBitmap(null);
-        super.onDestroyView();
-    }
+//    public void onDestroy() {
+//        this.mCoverImageView.setImageBitmap(null);
+//        super.onDestroy();
+//    }
+//
+//    public void onDestroyView() {
+//        this.mCoverImageView.setImageBitmap(null);
+//        super.onDestroyView();
+//    }
 
     private ViewPagerClickListener viewPagerClickListener;
 

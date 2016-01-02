@@ -46,6 +46,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     public void onCreate(Bundle paramBundle) {
         super.onCreate(paramBundle);
+        setRetainInstance(true);
         initData();
     }
 
@@ -57,8 +58,14 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         return localView;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     public void finish() {
-        getActivity().getSupportFragmentManager().popBackStack();
+        getActivity().getSupportFragmentManager().popBackStack(null,
+                getActivity().getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
     }
 
     /**
@@ -104,5 +111,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
                     httpParams);
         }
     }
+
+
 
 }
